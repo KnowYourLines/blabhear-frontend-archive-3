@@ -2,13 +2,12 @@
   <div>
     <div class="column">
       <label for="name">Name:</label><br /><br />
-      <div v-if="!editDisplayName">
-        <strong>{{ displayName }}</strong
-        ><br /><img
+      <div v-if="!editDisplayName" class="inline">
+        <img
           src="@/assets/icons8-edit-24.png"
           @click="edit"
           class="edit-button"
-        />
+        /><strong>{{ displayName }}</strong>
       </div>
       <div v-else>
         <input
@@ -120,6 +119,7 @@ export default {
       );
     },
     edit: function () {
+      this.editableDisplayName = this.displayName;
       this.editDisplayName = true;
       this.$nextTick(() => {
         this.$refs.editName.select();
@@ -138,12 +138,17 @@ export default {
         })
       );
     },
-  }
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 @media (orientation: landscape) {
   .column {
     display: inline-block;

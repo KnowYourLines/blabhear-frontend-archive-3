@@ -24,29 +24,21 @@
           class="home-button"
         />
         <img
-          v-if="!showMembers"
-          src="@/assets/icons8-management-48.png"
-          @click="showRoomMembers"
+          v-if="shareable"
+          src="@/assets/icons8-add-users-48.png"
+          @click="share"
           @contextmenu.prevent
-          class="show-members"
-        />
-        <img
-          v-if="showMembers"
-          src="@/assets/icons8-communication-50.png"
-          @click="hideRoomMembers"
-          @contextmenu.prevent
-          class="show-chat"
+          class="share-button"
         />
       </div>
 
       <label for="name">Group Name:</label><br /><br />
-      <div v-if="!editDisplayName">
-        <strong>{{ displayName }}</strong
-        ><br /><img
+      <div v-if="!editDisplayName" class="inline">
+        <img
           src="@/assets/icons8-edit-24.png"
           @click="edit"
           class="edit-button"
-        />
+        /><strong>{{ displayName }}</strong>
       </div>
       <div v-else>
         <input
@@ -66,7 +58,14 @@
           class="edit-button"
         />
       </div>
-      <div v-if="showMembers" id="room-members">
+      <br />
+      <div id="room-members">
+        <div id="members">
+          <b>Group members:</b><br /><br />
+          <span v-for="member in roomMembers" :key="member">
+            {{ member }}<br />
+          </span>
+        </div>
         <br />
         <Toggle v-model="privateRoom" @change="updatePrivacy">
           <template v-slot:label="{ checked, classList }">
@@ -103,19 +102,6 @@
           </div>
           <div v-else>None</div>
           <br />
-        </div>
-        <img
-          v-if="shareable"
-          src="@/assets/icons8-add-users-48.png"
-          @click="share"
-          @contextmenu.prevent
-          class="share-button"
-        />
-        <div id="members">
-          <b>Group members:</b><br /><br />
-          <span v-for="member in roomMembers" :key="member">
-            {{ member }}<br />
-          </span>
         </div>
       </div>
     </div>
@@ -193,17 +179,6 @@ export default {
     };
   },
   methods: {
-    showRoomMembers: function () {
-      this.showMembers = true;
-      this.showRecordingSettings = false;
-      if (this.isRecording) {
-        this.pauseRecording();
-      }
-    },
-    hideRoomMembers: function () {
-      this.showMembers = false;
-      this.showRecordingSettings = false;
-    },
     returnHome: function () {
       const url = new URL(window.location.href);
       window.history.replaceState("", "", url.origin);
@@ -277,13 +252,22 @@ export default {
     },
   },
   created() {
-    this.shareable = typeof navigator.share === "function";
+    this.shareable =
+      typeof navigator.share === "function" &&
+      navigator.canShare({
+        url: window.location.href,
+      });
     this.privateRoom = this.privacy;
   },
 };
 </script>
 
 <style scoped>
+.inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .divider {
   width: 50px;
   height: auto;
@@ -291,6 +275,18 @@ export default {
 }
 #members {
   word-break: break-word;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+#members::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#members {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 @media (orientation: landscape) {
   .column {
@@ -326,22 +322,6 @@ export default {
   cursor: pointer;
 }
 .share-button:hover {
-  background: #e0e0e0;
-}
-.show-members {
-  padding: 6px 10px;
-  border-radius: 70%;
-  cursor: pointer;
-}
-.show-members:hover {
-  background: #e0e0e0;
-}
-.show-chat {
-  padding: 6px 10px;
-  border-radius: 70%;
-  cursor: pointer;
-}
-.show-chat:hover {
   background: #e0e0e0;
 }
 .btn:hover {
