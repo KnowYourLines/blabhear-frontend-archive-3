@@ -42,6 +42,9 @@
       :authToken="authToken"
       :room="room"
       :userId="userId"
+      :uploadUrl="uploadUrl"
+      :deleteUploadUrl="deleteUploadUrl"
+      :uploadFilename="uploadFilename"
       @go-home="goHome"
     />
   </div>
@@ -78,6 +81,10 @@ export default {
       joinRequests: [],
       leftRoom: "",
       roomDisplayName: "",
+      uploadUrl: "",
+      uploadFilename: "",
+      deleteUploadUrl: "",
+      uploadTimeout: null,
     };
   },
   methods: {
@@ -221,6 +228,18 @@ export default {
               command: "read_room_notification",
             })
           );
+        } else if (data.type == "upload_url") {
+          this.uploadUrl = data.upload_url;
+          this.uploadFilename = data.filename;
+          this.deleteUploadUrl = data.delete_upload_url;
+          clearTimeout(this.uploadTimeout);
+          this.uploadTimeout = setTimeout(() => {
+            this.roomWebSocket.send(
+              JSON.stringify({
+                command: "fetch_upload_url",
+              })
+            );
+          }, data.refresh_upload_destination_in);
         }
       };
       this.roomWebSocket.onerror = (e) => {

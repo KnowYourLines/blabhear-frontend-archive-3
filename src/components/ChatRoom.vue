@@ -207,6 +207,18 @@ export default {
       type: String,
       required: true,
     },
+    uploadUrl: {
+      type: String,
+      required: true,
+    },
+    deleteUploadUrl: {
+      type: String,
+      required: true,
+    },
+    uploadFilename: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -235,6 +247,16 @@ export default {
           window.URL.revokeObjectURL(this.recordedAudioUrl);
         }
         this.recordedAudioUrl = window.URL.createObjectURL(this.recordingFile);
+        const requestOptions = {
+          method: "PUT",
+          headers: { "Content-Type": "audio/ogg" },
+          body: this.recordingFile,
+        };
+        fetch(this.uploadUrl, requestOptions)
+          .then(() => {
+            console.log("uploaded");
+          })
+          .catch((error) => console.log(error));
       }
     },
     addRecording: function () {
@@ -276,6 +298,15 @@ export default {
       this.recorder.stop();
       this.recordingFile = null;
       this.recordingData = [];
+      const requestOptions = {
+        method: "DELETE",
+        headers: { "Content-Type": "audio/ogg" },
+      };
+      fetch(this.deleteUploadUrl, requestOptions)
+        .then(() => {
+          console.log("delete");
+        })
+        .catch((error) => console.log(error));
     },
     returnHome: function () {
       const url = new URL(window.location.href);
