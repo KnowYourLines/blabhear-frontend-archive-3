@@ -24,11 +24,18 @@
           class="home-button"
         />
         <img
-          v-if="shareable"
-          src="@/assets/icons8-add-users-48.png"
-          @click="share"
+          v-if="!showMembers"
+          src="@/assets/icons8-management-48.png"
+          @click="showRoomMembers"
           @contextmenu.prevent
-          class="share-button"
+          class="show-members"
+        />
+        <img
+          v-else
+          src="@/assets/icons8-communication-50.png"
+          @click="hideRoomMembers"
+          @contextmenu.prevent
+          class="show-chat"
         />
       </div>
 
@@ -59,13 +66,7 @@
         />
       </div>
       <br />
-      <div id="room-members">
-        <div id="members">
-          <b>Group members:</b><br /><br />
-          <span v-for="member in roomMembers" :key="member">
-            {{ member }}<br />
-          </span>
-        </div>
+      <div v-if="!showMembers">
         <br />
         <div class="record-playback" v-if="!isRecording">
           <div v-if="recordingData.length == 0">
@@ -113,7 +114,21 @@
             />
           </div>
         </div>
-        <br />
+      </div>
+      <div v-else>
+        <div id="members">
+          <b>Group members:</b><br /><br />
+          <span v-for="member in roomMembers" :key="member">
+            {{ member }}<br />
+          </span>
+        </div>
+        <img
+          v-if="shareable"
+          src="@/assets/icons8-add-users-48.png"
+          @click="share"
+          @contextmenu.prevent
+          class="share-button"
+        /><br /><br />
         <Toggle v-model="privateRoom" @change="updatePrivacy">
           <template v-slot:label="{ checked, classList }">
             <span :class="classList.label">{{
@@ -221,6 +236,7 @@ export default {
   },
   data() {
     return {
+      showMembers: false,
       shareable: null,
       privateRoom: false,
       editDisplayName: false,
@@ -236,6 +252,15 @@ export default {
     };
   },
   methods: {
+    showRoomMembers: function () {
+      this.showMembers = true;
+      if (this.isRecording) {
+        this.pauseRecording();
+      }
+    },
+    hideRoomMembers: function () {
+      this.showMembers = false;
+    },
     send: function () {
       const requestOptions = {
         method: "PUT",
@@ -389,6 +414,22 @@ export default {
 </script>
 
 <style scoped>
+.show-members {
+  padding: 6px 10px;
+  border-radius: 70%;
+  cursor: pointer;
+}
+.show-members:hover {
+  background: #e0e0e0;
+}
+.show-chat {
+  padding: 6px 10px;
+  border-radius: 70%;
+  cursor: pointer;
+}
+.show-chat:hover {
+  background: #e0e0e0;
+}
 .send-button {
   cursor: pointer;
   transition: 0.2s;
