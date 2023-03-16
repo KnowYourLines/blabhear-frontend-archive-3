@@ -43,7 +43,6 @@
       :room="room"
       :userId="userId"
       :uploadUrl="uploadUrl"
-      :deleteUploadUrl="deleteUploadUrl"
       @go-home="goHome"
     />
   </div>
@@ -81,7 +80,6 @@ export default {
       leftRoom: "",
       roomDisplayName: "",
       uploadUrl: "",
-      deleteUploadUrl: "",
       uploadTimeout: null,
     };
   },
@@ -228,7 +226,6 @@ export default {
           );
         } else if (data.type == "upload_url") {
           this.uploadUrl = data.upload_url;
-          this.deleteUploadUrl = data.delete_upload_url;
           clearTimeout(this.uploadTimeout);
           this.uploadTimeout = setTimeout(() => {
             this.roomWebSocket.send(

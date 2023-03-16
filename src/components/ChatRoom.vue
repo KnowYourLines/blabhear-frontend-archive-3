@@ -78,6 +78,13 @@
           </div>
           <div class="playback" v-else>
             <img
+              v-if="shareable"
+              src="@/assets/icons8-send-48.png"
+              @click="send"
+              @contextmenu.prevent
+              class="send-button"
+            />
+            <img
               src="@/assets/icons8-microphone-60.png"
               @click="recordAudio"
               @contextmenu.prevent
@@ -211,10 +218,6 @@ export default {
       type: String,
       required: true,
     },
-    deleteUploadUrl: {
-      type: String,
-      required: true,
-    },
   },
   data() {
     return {
@@ -233,6 +236,22 @@ export default {
     };
   },
   methods: {
+    send: function () {
+      const requestOptions = {
+        method: "PUT",
+        headers: { "Content-Type": "audio/ogg" },
+        body: this.recordingFile,
+      };
+      fetch(this.uploadUrl, requestOptions)
+        .then(() => {
+          this.roomWebSocket.send(
+            JSON.stringify({
+              command: "send_message",
+            })
+          );
+        })
+        .catch((error) => console.log(error));
+    },
     pauseRecording: function () {
       if (this.recorder) {
         this.recorder.pause();
@@ -243,20 +262,6 @@ export default {
           window.URL.revokeObjectURL(this.recordedAudioUrl);
         }
         this.recordedAudioUrl = window.URL.createObjectURL(this.recordingFile);
-        const requestOptions = {
-          method: "PUT",
-          headers: { "Content-Type": "audio/ogg" },
-          body: this.recordingFile,
-        };
-        fetch(this.uploadUrl, requestOptions)
-          .then(() => {
-            this.roomWebSocket.send(
-              JSON.stringify({
-                command: "send_message",
-              })
-            );
-          })
-          .catch((error) => console.log(error));
       }
     },
     addRecording: function () {
@@ -298,12 +303,6 @@ export default {
       this.recorder.stop();
       this.recordingFile = null;
       this.recordingData = [];
-      const requestOptions = {
-        method: "DELETE",
-        headers: { "Content-Type": "audio/ogg" },
-      };
-      fetch(this.deleteUploadUrl, requestOptions)
-        .catch((error) => console.log(error));
     },
     returnHome: function () {
       const url = new URL(window.location.href);
@@ -389,6 +388,13 @@ export default {
 </script>
 
 <style scoped>
+.send-button {
+  cursor: pointer;
+  transition: 0.2s;
+}
+.send-button:hover {
+  transform: scale(1.1);
+}
 .add-record {
   padding: 6px 10px;
   cursor: pointer;
