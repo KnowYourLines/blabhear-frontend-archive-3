@@ -215,10 +215,6 @@ export default {
       type: String,
       required: true,
     },
-    uploadFilename: {
-      type: String,
-      required: true,
-    },
   },
   data() {
     return {
@@ -254,7 +250,11 @@ export default {
         };
         fetch(this.uploadUrl, requestOptions)
           .then(() => {
-            console.log("uploaded");
+            this.roomWebSocket.send(
+              JSON.stringify({
+                command: "send_message",
+              })
+            );
           })
           .catch((error) => console.log(error));
       }
@@ -303,9 +303,6 @@ export default {
         headers: { "Content-Type": "audio/ogg" },
       };
       fetch(this.deleteUploadUrl, requestOptions)
-        .then(() => {
-          console.log("delete");
-        })
         .catch((error) => console.log(error));
     },
     returnHome: function () {
