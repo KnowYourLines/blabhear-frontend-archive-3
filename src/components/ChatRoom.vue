@@ -241,8 +241,6 @@ export default {
       privateRoom: false,
       editDisplayName: false,
       editableDisplayName: null,
-      messageToSend: "",
-      showMembers: false,
       audio: null,
       isRecording: false,
       recorder: null,
