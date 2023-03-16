@@ -249,6 +249,7 @@ export default {
               command: "send_message",
             })
           );
+          this.deleteRecorded();
         })
         .catch((error) => console.log(error));
     },

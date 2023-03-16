@@ -224,7 +224,15 @@ export default {
               command: "read_room_notification",
             })
           );
-        } else if (data.type == "upload_url") {
+        } else if (data.type == "refresh_message_notifications") {
+          this.roomWebSocket.send(
+            JSON.stringify({
+              command: "fetch_message_notifications",
+            })
+          );
+        } else if (data.type == "message_notifications") {
+          console.log(data.message_notifications)
+        }else if (data.type == "upload_url") {
           this.uploadUrl = data.upload_url;
           clearTimeout(this.uploadTimeout);
           this.uploadTimeout = setTimeout(() => {
