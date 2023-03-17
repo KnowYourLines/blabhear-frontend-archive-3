@@ -253,6 +253,12 @@ export default {
               })
             );
           }, data.refresh_upload_destination_in);
+        } else if (data.type == "refresh_upload_url") {
+          this.roomWebSocket.send(
+            JSON.stringify({
+              command: "fetch_upload_url",
+            })
+          );
         }
       };
       this.roomWebSocket.onerror = (e) => {
