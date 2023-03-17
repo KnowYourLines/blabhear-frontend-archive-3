@@ -89,7 +89,10 @@
                   controls
                   :src="notification.url"
                   controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
-                  @play="stopOtherNotes(notification.id)"
+                  @play="
+                    stopOtherNotes(notification.id);
+                    markRead(notification);
+                  "
                 ></audio>
               </div>
               {{ notification.readable_timestamp }} <br />
@@ -285,15 +288,36 @@ export default {
     };
   },
   methods: {
-    stopOtherNotes(newNote) {
+    markRead(selectedNotification) {
+      const refName = `${selectedNotification.id}-player`;
+      const player = this.$refs[refName][0];
+      player.onended = function () {
+        if (!selectedNotification.read) {
+          this.messageNotifications.forEach((notification) => {
+            if (
+              selectedNotification.id == notification.id &&
+              selectedNotification.timestamp == notification.timestamp
+            ) {
+              this.roomWebSocket.send(
+                JSON.stringify({
+                  command: "read_message_notification",
+                  message_notification_id: selectedNotification.id,
+                })
+              );
+            }
+          });
+        }
+      }.bind(this);
+    },
+    stopOtherNotes(currentNote) {
       if (this.previousNote) {
         const refName = `${this.previousNote}-player`;
         const player = this.$refs[refName][0];
-        if (newNote != this.previousNote) {
+        if (currentNote != this.previousNote) {
           player.pause();
         }
       }
-      this.previousNote = newNote;
+      this.previousNote = currentNote;
     },
     showRoomMembers: function () {
       this.showMembers = true;
