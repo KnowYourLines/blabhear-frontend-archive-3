@@ -170,9 +170,9 @@
           </template>
         </Toggle>
         <br /><br />
-        <div id="join-requests" v-if="privateRoom">
+        <div v-if="privateRoom">
           <span><b>Users requesting to join:</b><br /><br /></span>
-          <div v-if="joinRequests.length > 0" id="requests">
+          <div v-if="joinRequests.length > 0" id="join-requests">
             <span v-for="request in joinRequests" :key="request.user">
               {{ request.user__display_name }}
               <div class="btn-group">
@@ -573,7 +573,7 @@ export default {
 }
 #members {
   word-break: break-word;
-  max-height: 400px;
+  max-height: 200px;
   overflow-y: scroll;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -588,7 +588,7 @@ export default {
 }
 #join-requests {
   word-break: break-word;
-  max-height: 400px;
+  max-height: 200px;
   overflow-y: scroll;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
