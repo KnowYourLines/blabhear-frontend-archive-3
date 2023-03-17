@@ -67,6 +67,30 @@
       </div>
       <br />
       <div v-if="!showMembers">
+        <div id="messages">
+          <span
+            v-for="notification in messageNotifications"
+            :key="notification.id"
+          >
+            <br />
+            <div
+              :class="
+                notification.read ? 'notification' : 'unread-notification'
+              "
+              @contextmenu.prevent
+            >
+              <strong>
+                {{ notification.message__creator__display_name }}</strong
+              >
+              <br />
+              <div>
+                {{ notification.url }}
+              </div>
+              {{ notification.readable_timestamp }} <br />
+            </div>
+            <br />
+          </span>
+        </div>
         <br />
         <div class="record-playback" v-if="!isRecording">
           <div v-if="recordingData.length == 0">
@@ -231,6 +255,10 @@ export default {
     },
     uploadUrl: {
       type: String,
+      required: true,
+    },
+    messageNotifications: {
+      type: Array,
       required: true,
     },
   },
@@ -412,6 +440,29 @@ export default {
 </script>
 
 <style scoped>
+.notification {
+  padding: 6px 10px;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #10b981;
+  cursor: pointer;
+  overflow: clip;
+}
+.notification:hover {
+  background: #e0e0e0;
+}
+.unread-notification {
+  padding: 6px 10px;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #10b981;
+  background-color: rgb(76, 178, 247);
+  cursor: pointer;
+  overflow: clip;
+}
+.unread-notification:hover {
+  background: #e0e0e0;
+}
 .show-members {
   padding: 6px 10px;
   border-radius: 70%;
@@ -499,6 +550,21 @@ export default {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 #members {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+#messages {
+  word-break: break-word;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+#messages::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#messages {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
