@@ -602,7 +602,7 @@ export default {
   scrollbar-width: none; /* Firefox */
 }
 #messages {
-  max-height: 650px;
+  max-height: 500px;
   overflow-y: scroll;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
