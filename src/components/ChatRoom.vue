@@ -165,7 +165,7 @@
           </template>
         </Toggle>
         <br /><br />
-        <div v-if="privateRoom">
+        <div id="join-requests" v-if="privateRoom">
           <span><b>Users requesting to join:</b><br /><br /></span>
           <div v-if="joinRequests.length > 0" id="requests">
             <span v-for="request in joinRequests" :key="request.user">
@@ -449,11 +449,7 @@ export default {
   border-radius: 50%;
   border-style: solid;
   border-color: #10b981;
-  cursor: pointer;
   overflow: clip;
-}
-.notification:hover {
-  background: #e0e0e0;
 }
 .unread-notification {
   padding: 6px 10px;
@@ -461,11 +457,7 @@ export default {
   border-style: solid;
   border-color: #10b981;
   background-color: rgb(76, 178, 247);
-  cursor: pointer;
   overflow: clip;
-}
-.unread-notification:hover {
-  background: #e0e0e0;
 }
 .show-members {
   padding: 6px 10px;
@@ -557,9 +549,23 @@ export default {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-#messages {
+#join-requests {
   word-break: break-word;
   max-height: 400px;
+  overflow-y: scroll;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+#join-requests::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#join-requests {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+#messages {
+  max-height: 650px;
   overflow-y: scroll;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
