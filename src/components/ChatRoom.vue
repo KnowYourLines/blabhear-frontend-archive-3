@@ -149,11 +149,13 @@
         </div>
       </div>
       <div v-else>
-        <div id="members">
+        <div>
           <b>Group members:</b><br /><br />
-          <span v-for="member in roomMembers" :key="member">
-            {{ member }}<br />
-          </span>
+          <div id="members">
+            <span v-for="member in roomMembers" :key="member">
+              {{ member }}<br />
+            </span>
+          </div>
         </div>
         <img
           v-if="shareable"
