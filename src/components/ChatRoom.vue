@@ -85,9 +85,11 @@
               <br />
               <div>
                 <audio
+                  :ref="notification.id + '-player'"
                   controls
                   :src="notification.url"
                   controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+                  @play="stopOtherNotes(notification.id)"
                 ></audio>
               </div>
               {{ notification.readable_timestamp }} <br />
@@ -268,6 +270,7 @@ export default {
   },
   data() {
     return {
+      previousNote: null,
       showMembers: false,
       shareable: null,
       privateRoom: false,
@@ -282,6 +285,16 @@ export default {
     };
   },
   methods: {
+    stopOtherNotes(newNote) {
+      if (this.previousNote) {
+        const refName = `${this.previousNote}-player`;
+        const player = this.$refs[refName][0];
+        if (newNote != this.previousNote) {
+          player.pause();
+        }
+      }
+      this.previousNote = newNote;
+    },
     showRoomMembers: function () {
       this.showMembers = true;
       if (this.isRecording) {
