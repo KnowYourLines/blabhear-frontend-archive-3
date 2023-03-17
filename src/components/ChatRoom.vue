@@ -84,7 +84,11 @@
               >
               <br />
               <div>
-                {{ notification.url }}
+                <audio
+                  controls
+                  :src="notification.url"
+                  controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+                ></audio>
               </div>
               {{ notification.readable_timestamp }} <br />
             </div>
