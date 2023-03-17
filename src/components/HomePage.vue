@@ -175,7 +175,7 @@ export default {
 }
 .notification {
   padding: 6px 10px;
-  border-radius: 50%;
+  border-radius: 25px;
   border-style: solid;
   border-color: #10b981;
   cursor: pointer;
@@ -186,7 +186,7 @@ export default {
 }
 .unread-notification {
   padding: 6px 10px;
-  border-radius: 50%;
+  border-radius: 25px;
   border-style: solid;
   border-color: #10b981;
   background-color: rgb(76, 178, 247);
